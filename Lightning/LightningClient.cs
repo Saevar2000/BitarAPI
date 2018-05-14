@@ -1,24 +1,28 @@
 using System;
 using System.Net.Sockets;
 using System.Text;
+using Newtonsoft.Json.Linq;
 using Serilog;
 
 namespace Lightning
 {
     public class LightningClient
     {
+        readonly UnixDomainSocketEndPoint unixDomainSocketEndPoint = new UnixDomainSocketEndPoint(
+            Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) +
+            "/.lightning/lightning-rpc"
+        );
 
         public LightningClient()
         {
-            string homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            string unixDomainSocketEndPoint = homeDir + "/.lightning/lightning-rpc";
-
-            string request = "{\"method\": \"getinfo\", \"params\": [], \"id\": \"Bitar-API\"}";
-            string result = SocketSendReceive(unixDomainSocketEndPoint, request);
+            string result = SocketSendReceive("getinfo");
             Log.Information(result);
         }
-        public string SocketSendReceive(string unixDomainSocketEndPoint, string request)
+        public string SocketSendReceive(string request)
         {
+            // Convert request to the proper format
+            request = CreateRequest(request);
+
             // Data buffer for incoming data.
             byte[] bytes = new byte[1024];
 
@@ -30,7 +34,7 @@ namespace Lightning
                 // Connect the socket to the endpoint. Catch any errors.
                 try
                 {
-                    s.Connect(new UnixDomainSocketEndPoint(unixDomainSocketEndPoint));
+                    s.Connect(unixDomainSocketEndPoint);
                     Log.Information("Socket connected to {0}", s.RemoteEndPoint.ToString());
 
                     // Encode the data string into a byte array.
@@ -68,7 +72,18 @@ namespace Lightning
                 Log.Information(e.ToString());
             }
 
-            return "Is lightningd down?";
+            return null;
+        }
+
+        private string CreateRequest(string cmd)
+        {
+            JObject o = new JObject()
+            {
+                { "method", cmd },
+                { "id", "Bitar-API"},
+                { "params", "[]" }
+            };
+            return o.ToString();
         }
     }
 }

@@ -2,44 +2,41 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Lightning;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BitarAPI.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class LightningController : ControllerBase
     {
+        private readonly LightningClient _lightning;
+
+        public LightningController(LightningClient lightningClient)
+        {
+            _lightning = lightningClient;
+        }
+
         // GET lightning
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public ActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            return Ok(_lightning.SocketSendReceive("getinfo"));
         }
 
-        // GET lightning/5
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        // GET lightning/listpeers
+        [HttpGet("listpeers")]
+        public ActionResult<string> ListPeers()
         {
-            return "value";
+            return _lightning.SocketSendReceive("listpeers");
         }
 
-        // POST lightning
-        [HttpPost]
-        public void Post([FromBody] string value)
+        // GET lightning/listpeers
+        [HttpGet("listinvoices")]
+        public ActionResult<string> ListInvoices()
         {
-        }
-
-        // PUT lightning/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE lightning/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            return _lightning.SocketSendReceive("listinvoices");
         }
     }
 }
