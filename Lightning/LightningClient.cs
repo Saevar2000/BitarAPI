@@ -21,14 +21,13 @@ namespace Lightning
 
         public LightningClient()
         {
-            // Try to create a Unix domain socket.
-            try {
-                s = new Socket(AddressFamily.Unix, SocketType.Stream, ProtocolType.Unspecified);
-            } 
-            catch (Exception e)
-            {
-                Log.Information(e.ToString());
-            }
+            // Create a Unix domain socket.
+            s = new Socket(AddressFamily.Unix, SocketType.Stream, ProtocolType.Unspecified);
+            Log.Information(s.SendTimeout.ToString());
+            Log.Information(s.ReceiveTimeout.ToString());
+            Log.Information(s.SendBufferSize.ToString());
+            Log.Information(s.ReceiveBufferSize.ToString());
+            Log.Information(s.Ttl.ToString());
         }
 
         public bool GetInfo(out Info info)
