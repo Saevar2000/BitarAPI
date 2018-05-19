@@ -27,7 +27,6 @@ namespace Lightning
             Log.Information(s.ReceiveTimeout.ToString());
             Log.Information(s.SendBufferSize.ToString());
             Log.Information(s.ReceiveBufferSize.ToString());
-            Log.Information(s.Ttl.ToString());
         }
 
         public bool GetInfo(out Info info)
