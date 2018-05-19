@@ -58,7 +58,7 @@ namespace Lightning
             //     label = label,
             //     description = description
             // };
-            invoice = Send<Invoice>("invoice ", new object[] { msatoshi, label, description ?? ""});
+            invoice = Send<Invoice>("invoice", new object[] { msatoshi, label, description ?? ""});
             return (invoice != null);
         }
 
