@@ -50,15 +50,9 @@ namespace Lightning
             return (invoices != null);
         }
 
-        public bool CreateInvoice(int msatoshi, string label, string description, out Invoice invoice)
+        public bool CreateInvoice(Invoice inv, out Invoice invoice)
         {
-            // invoice = new CreateInvoice
-            // {
-            //     msatoshi = msatoshi,
-            //     label = label,
-            //     description = description
-            // };
-            invoice = Send<Invoice>("invoice", new object[] { msatoshi, label, description ?? ""});
+            invoice = Send<Invoice>("invoice", new object[] { inv.msatoshi, inv.label, inv.description ?? ""});
             return (invoice != null);
         }
 
