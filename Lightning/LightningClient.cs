@@ -23,6 +23,7 @@ namespace Lightning
         {
             // Create a Unix domain socket.
             s = new Socket(AddressFamily.Unix, SocketType.Stream, ProtocolType.Unspecified);
+            Log.Information("socket created");
         }
 
         public bool GetInfo(out Info info)
@@ -107,14 +108,6 @@ namespace Lightning
             }
             catch (SocketException se)
             {
-                if (se.NativeErrorCode.Equals(10035))
-                {
-                    Console.WriteLine("Still Connected, but the Send would block");
-                }
-                else
-                {
-                    Console.WriteLine("Disconnected: error code {0}!", se.NativeErrorCode);
-                }
                 Log.Information("SocketException : {0}", se.ToString());
             }
             catch (Exception e)
