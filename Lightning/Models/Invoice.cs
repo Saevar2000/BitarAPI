@@ -5,6 +5,7 @@ namespace Lightning.Models
     public class Invoice
     {
         public string label { get; set; }
+        public string description { get; set; }
         public string bolt11 { get; set; }
         public string payment_hash { get; set; }
         public int msatoshi { get; set; }
