@@ -80,14 +80,13 @@ namespace Lightning
             // Send a JSON-RPC command to the socket and receive response.
             try
             {
+                // Check every time because lightningd could have been restarted.
                 if (!s.Connected)
                 {
                     // Connect the socket to the endpoint.
                     s.Connect(unixDomainSocketEndPoint);
                     Log.Information("Socket connected to {0}", s.RemoteEndPoint.ToString());
                 }
-
-                Log.Information("Socket connection status {0}", s.Connected.ToString());
 
                 // Encode the data string into a byte array.
                 byte[] msg = Encoding.UTF8.GetBytes(request);
