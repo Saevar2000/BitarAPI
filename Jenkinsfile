@@ -12,7 +12,7 @@ pipeline {
         sh "[ -z \"\$(docker ps -a | grep bitarapi 2>/dev/null)\" ] || docker rm -f bitarapi"
         
         echo "Starting container"
-        sh "docker run -ti --detach --name bitarapi --publish 5000:80 bitarapi"
+        sh "docker run --detach --name bitarapi --publish 80:5000 bitarapi"
       }
     }
   }
