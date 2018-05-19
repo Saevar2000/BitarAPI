@@ -14,9 +14,9 @@ namespace BitarAPI.Controllers
     {
         private readonly LightningClient _lightning;
 
-        public LightningController()
+        public LightningController(LightningClient lightning)
         {
-            _lightning = new LightningClient();
+            _lightning = lightning;
         }
 
         // GET lightning
