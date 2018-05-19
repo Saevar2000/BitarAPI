@@ -23,10 +23,8 @@ namespace Lightning
         {
             // Create a Unix domain socket.
             s = new Socket(AddressFamily.Unix, SocketType.Stream, ProtocolType.Unspecified);
-            Log.Information(s.SendTimeout.ToString());
-            Log.Information(s.ReceiveTimeout.ToString());
-            Log.Information(s.SendBufferSize.ToString());
-            Log.Information(s.ReceiveBufferSize.ToString());
+            Log.Information(s.NoDelay.ToString());
+            s.
         }
 
         public bool GetInfo(out Info info)
@@ -79,7 +77,7 @@ namespace Lightning
             // Data buffer for incoming data.
             byte[] bytes = new byte[1024];
 
-             
+
             // Send a JSON-RPC command to the socket and receive response.
             try
             {
@@ -111,6 +109,14 @@ namespace Lightning
             }
             catch (SocketException se)
             {
+                if (se.NativeErrorCode.Equals(10035))
+                {
+                    Console.WriteLine("Still Connected, but the Send would block");
+                }
+                else
+                {
+                    Console.WriteLine("Disconnected: error code {0}!", se.NativeErrorCode);
+                }
                 Log.Information("SocketException : {0}", se.ToString());
             }
             catch (Exception e)
