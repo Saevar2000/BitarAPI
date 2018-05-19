@@ -17,9 +17,18 @@ namespace Lightning
             "/.lightning/lightning-rpc"
         );
 
+        Socket s;
+
         public LightningClient()
         {
-            Info info = Send<Info>("getinfo");
+            // Try to create a Unix domain socket.
+            try {
+                s = new Socket(AddressFamily.Unix, SocketType.Stream, ProtocolType.Unspecified);
+            } 
+            catch (Exception e)
+            {
+                Log.Information(e.ToString());
+            }
         }
 
         public bool GetInfo(out Info info)
@@ -63,7 +72,7 @@ namespace Lightning
             SocketSendReceive("a");
             return (T)Convert.ChangeType(JsonConvert.DeserializeObject<JsonResponse<T>>(SocketSendReceive(cmd, parameters)).Result, typeof(T));
         }
-        
+
         private string SocketSendReceive(string request, object[] parameters = null)
         {
             // Convert request to the proper format
@@ -72,52 +81,43 @@ namespace Lightning
             // Data buffer for incoming data.
             byte[] bytes = new byte[1024];
 
+             
+            // Send a JSON-RPC command to the socket and receive response.
             try
             {
-                // Create a Unix domain socket.
-                Socket s = new Socket(AddressFamily.Unix, SocketType.Stream, ProtocolType.Unspecified);
-
-                // Connect the socket to the endpoint. Catch any errors.
-                try
+                if (!s.Connected)
                 {
+                    // Connect the socket to the endpoint.
                     s.Connect(unixDomainSocketEndPoint);
                     Log.Information("Socket connected to {0}", s.RemoteEndPoint.ToString());
-                    Log.Information("Socket connection status {0}", s.Connected.ToString());
-                    Log.Information("Socket protocol type {0}",s.ProtocolType.ToString());
-
-                    // Encode the data string into a byte array.
-                    byte[] msg = Encoding.UTF8.GetBytes(request);
-
-                    // Send the data through the socket.
-                    int bytesSent = s.Send(msg);
-
-                    // Receive the response.
-                    int bytesRec = s.Receive(bytes);
-
-                    string result = Encoding.UTF8.GetString(bytes, 0, bytesRec);
-
-                    // Release the socket.
-                    s.Shutdown(SocketShutdown.Both);
-                    s.Close();
-
-                    return result;
                 }
-                catch (ArgumentNullException ane)
-                {
-                    Log.Information("ArgumentNullException : {0}", ane.ToString());
-                }
-                catch (SocketException se)
-                {
-                    Log.Information("SocketException : {0}", se.ToString());
-                }
-                catch (Exception e)
-                {
-                    Log.Information("Unexpected exception : {0}", e.ToString());
-                }
+
+                Log.Information("Socket connection status {0}", s.Connected.ToString());
+
+                // Encode the data string into a byte array.
+                byte[] msg = Encoding.UTF8.GetBytes(request);
+
+                // Send the data through the socket.
+                int bytesSent = s.Send(msg);
+
+                // Receive the response.
+                int bytesRec = s.Receive(bytes);
+
+                string result = Encoding.UTF8.GetString(bytes, 0, bytesRec);
+
+                return result;
+            }
+            catch (ArgumentNullException ane)
+            {
+                Log.Information("ArgumentNullException : {0}", ane.ToString());
+            }
+            catch (SocketException se)
+            {
+                Log.Information("SocketException : {0}", se.ToString());
             }
             catch (Exception e)
             {
-                Log.Information(e.ToString());
+                Log.Information("Unexpected exception : {0}", e.ToString());
             }
 
             return null;
