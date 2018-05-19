@@ -63,11 +63,11 @@ namespace BitarAPI.Controllers
             return invoices;
         }
 
-        // GET lightning/createinvoice
-        [HttpGet("createinvoice")]
-        public ActionResult<Invoice> CreateInvoice()
+        // Post lightning/createinvoice
+        [HttpPost("createinvoice")]
+        public ActionResult<Invoice> CreateInvoice([FromBody] Invoice inv)
         {
-            if (!_lightning.CreateInvoice(25000, "guu", "lala", out var invoice))
+            if (!_lightning.CreateInvoice(inv, out var invoice))
             {
                 return NotFound();
             }
