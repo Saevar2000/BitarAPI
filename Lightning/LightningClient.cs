@@ -20,7 +20,6 @@ namespace Lightning
         public LightningClient()
         {
             Info info = Send<Info>("getinfo");
-            Log.Information(info.ToString());
         }
 
         public bool GetInfo(out Info info)
@@ -83,7 +82,8 @@ namespace Lightning
                 {
                     s.Connect(unixDomainSocketEndPoint);
                     Log.Information("Socket connected to {0}", s.RemoteEndPoint.ToString());
-                    Log.Information(s.ProtocolType.ToString());
+                    Log.Information("Socket connection status {0}", s.Connected.ToString());
+                    Log.Information("Socket protocol type {0}",s.ProtocolType.ToString());
 
                     // Encode the data string into a byte array.
                     byte[] msg = Encoding.UTF8.GetBytes(request);
