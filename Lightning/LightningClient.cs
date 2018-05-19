@@ -24,7 +24,6 @@ namespace Lightning
             // Create a Unix domain socket.
             s = new Socket(AddressFamily.Unix, SocketType.Stream, ProtocolType.Unspecified);
             Log.Information(s.NoDelay.ToString());
-            s.
         }
 
         public bool GetInfo(out Info info)
