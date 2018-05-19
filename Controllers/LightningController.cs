@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Lightning;
+using Lightning.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BitarAPI.Controllers
@@ -13,30 +14,64 @@ namespace BitarAPI.Controllers
     {
         private readonly LightningClient _lightning;
 
-        public LightningController(LightningClient lightningClient)
+        public LightningController()
         {
-            _lightning = lightningClient;
+            _lightning = new LightningClient();
         }
 
         // GET lightning
         [HttpGet]
-        public ActionResult Get()
+        public ActionResult<Info> Get()
         {
-            return Ok(_lightning.SocketSendReceive("getinfo"));
+            if (!_lightning.GetInfo(out var info))
+            {
+                return NotFound();
+            }
+            return info;
         }
 
         // GET lightning/listpeers
         [HttpGet("listpeers")]
-        public ActionResult<string> ListPeers()
+        public ActionResult<List<Peer>> ListPeers()
         {
-            return _lightning.SocketSendReceive("listpeers");
+            if (!_lightning.ListPeers(out var peers))
+            {
+                return NotFound();
+            }
+            return peers;
         }
 
-        // GET lightning/listpeers
-        [HttpGet("listinvoices")]
-        public ActionResult<string> ListInvoices()
+        // GET lightning/listnodes
+        [HttpGet("listnodes")]
+        public ActionResult<List<Node>> ListNodes()
         {
-            return _lightning.SocketSendReceive("listinvoices");
+            if (!_lightning.ListNodes(out var nodes))
+            {
+                return NotFound();
+            }
+            return nodes;
+        }
+
+        // GET lightning/listinvoices
+        [HttpGet("listinvoices")]
+        public ActionResult<List<Invoice>> ListInvoices()
+        {
+            if (!_lightning.ListInvoices(out var invoices))
+            {
+                return NotFound();
+            }
+            return invoices;
+        }
+
+        // GET lightning/createinvoice
+        [HttpGet("createinvoice")]
+        public ActionResult<Invoice> CreateInvoice()
+        {
+            if (!_lightning.CreateInvoice(25000, "guu", "lala", out var invoice))
+            {
+                return NotFound();
+            }
+            return invoice;
         }
     }
 }
