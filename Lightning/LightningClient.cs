@@ -52,16 +52,7 @@ namespace Lightning
 
         public bool CreateInvoice(Invoice inv, out Invoice invoice)
         {
-            invoice = Send<Invoice>("invoice", new object[] { inv.msatoshi, inv.label, inv.description ?? "" });
-
-            if (invoice != null)
-            {
-                // Need to manually set these because lightning-rpc doesn't return them
-                invoice.description = inv.description;
-                invoice.label = inv.label;
-                invoice.msatoshi = inv.msatoshi;
-                invoice.status = "unpaid";
-            }
+            invoice = Send<Invoice>("invoice", new object[] { inv.msatoshi, inv.label, inv.description });
 
             return (invoice != null);
         }
