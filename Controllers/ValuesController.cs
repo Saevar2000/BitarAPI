@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BitarAPI.Controllers
 {
     [Route("[controller]")]
+    [Produces("application/json")]
     [ApiController]
     public class ValuesController : ControllerBase
     {
