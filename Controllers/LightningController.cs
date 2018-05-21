@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BitarAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class LightningController : ControllerBase
     {
@@ -19,7 +19,7 @@ namespace BitarAPI.Controllers
             _lightning = lightning;
         }
 
-        // GET lightning
+        // GET api.bitar.is/lightning
         [HttpGet]
         public ActionResult<Info> Get()
         {
@@ -30,7 +30,7 @@ namespace BitarAPI.Controllers
             return info;
         }
 
-        // GET lightning/listpeers
+        // GET api.bitar.is/lightning/listpeers
         [HttpGet("listpeers")]
         public ActionResult<List<Peer>> ListPeers()
         {
@@ -41,7 +41,7 @@ namespace BitarAPI.Controllers
             return peers;
         }
 
-        // GET lightning/listnodes
+        // GET api.bitar.is/lightning/listnodes
         [HttpGet("listnodes")]
         public ActionResult<List<Node>> ListNodes()
         {
@@ -52,7 +52,7 @@ namespace BitarAPI.Controllers
             return nodes;
         }
 
-        // GET lightning/listinvoices
+        // GET api.bitar.is/lightning/listinvoices
         [HttpGet("listinvoices")]
         public ActionResult<List<Invoice>> ListInvoices()
         {
@@ -63,7 +63,7 @@ namespace BitarAPI.Controllers
             return invoices;
         }
 
-        // Post lightning/createinvoice
+        // Post api.bitar.is/lightning/createinvoice
         [HttpPost("createinvoice")]
         public ActionResult<Invoice> CreateInvoice([FromBody] Invoice inv)
         {
