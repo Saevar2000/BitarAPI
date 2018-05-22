@@ -65,7 +65,7 @@ namespace Lightning
 
         private string SocketSendReceive(string request, object[] parameters = null)
         {
-            // Convert request to the proper format
+            // Convert request to the proper format.
             request = CreateRequest(request, parameters);
 
             // Data buffer for incoming data.
